@@ -421,3 +421,9 @@ st.write(summary)
 
 
 
+st.divider()  # I added a horizontal rule with some HTML code
+st.markdown(
+    "<h3 style='text-align: center;'>Thank you for visiting! 😊</h3>",
+    unsafe_allow_html=True
+)
+
