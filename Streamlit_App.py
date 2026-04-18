@@ -191,50 +191,20 @@ else:
 
 ##q3
 st.subheader("3. Are there seasonal patterns in incidents?")
-
-# Ensure Start date is datetime
-df["Start date"] = pd.to_datetime(df["Start date"], errors="coerce")
-
-# Extract month from Start date
 df["Month"] = df["Start date"].dt.month
+fig, ax = plt.subplots()
+sns.countplot(data=df, x="Month", ax=ax)
+st.pyplot(fig)
 
-# Chart linked to filters
-if not df.empty:
-    fig, ax = plt.subplots(figsize=(12,6))  # wider figure for readability
-    sns.countplot(data=df, x="Month", ax=ax, palette="viridis")
-    ax.set_title("Incidents by Month")
-    st.pyplot(fig)
+# Add summary
+monthly_counts = df["Month"].value_counts().sort_index()
+peak_month = monthly_counts.idxmax()
+low_month = monthly_counts.idxmin()
 
-    # Dynamic summary
-    month_counts = df["Month"].value_counts().sort_index()
-    top_months = month_counts.nlargest(min(3, len(month_counts)))
-
-    if len(top_months) >= 3:
-        summary = (
-            f"This chart reflects the filtered selection. "
-            f"Month {top_months.index[0]} recorded the highest number of incidents, "
-            f"followed by {top_months.index[1]} and {top_months.index[2]}. "
-            "This suggests possible seasonal patterns."
-        )
-    elif len(top_months) == 2:
-        summary = (
-            f"This chart reflects the filtered selection. "
-            f"Month {top_months.index[0]} recorded the highest number of incidents, "
-            f"followed by {top_months.index[1]}."
-        )
-    elif len(top_months) == 1:
-        summary = (
-            f"This chart reflects the filtered selection. "
-            f"Month {top_months.index[0]} recorded the highest number of incidents."
-        )
-    else:
-        summary = "No months available after filtering."
-
-    st.write(summary)
-else:
-    st.write("No data matches the current filter selection.")
-
-
+st.write(
+    f"Incidents show clear seasonal variation. The highest number of incidents occurs in month {peak_month}, "
+    f"while the lowest occurs in month {low_month}. This suggests that certain times of the year are more prone to incidents."
+)
 
 
 
