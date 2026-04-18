@@ -8,7 +8,7 @@ import datetime as dt
 import numpy as np
 from PIL import Image
 
-df = pd.read_csv("rebecca.csv")
+df = pd.read_csv("REBECCA.csv")
 
 
 st.markdown(
