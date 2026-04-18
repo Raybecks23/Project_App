@@ -86,6 +86,17 @@ df = df[columns]
 with st.expander("Click to check Incident Table", expanded=False):
     st.dataframe(df, width="stretch", height=200)
 
+
+st.sidebar.markdown(
+    """ <div style="padding:15px; border-radius:8px; margin:7px; width:250px; background:#1e1e1e; color:#ffffff; ">  
+        <h3 style="margin:0;">👤 User Profile</h3>
+        <p style="margin:0;">Name: REBECCA</p>
+        <p style="margin:0;">Role: Data Analyst</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 # Sidebar filters
 # Sidebar filters (always define them first)
 selected_state = st.sidebar.multiselect("Choose a State:", df["State"].unique())
