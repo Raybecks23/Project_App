@@ -79,40 +79,57 @@ st.set_page_config(
     initial_sidebar_state="expanded"        # Options: "expanded" or "collapsed"
 )
 # Sidebar filters
-# Sidebar filters
-# After plotting chart
+# Always start with a copy of df
+filtered_df = df.copy()
+
+# Apply filters safely
+if selected_state:
+    filtered_df = filtered_df[filtered_df["State"].isin(selected_state)]
+
+if selected_deaths:
+    filtered_df = filtered_df[filtered_df["Number of deaths"].isin(selected_deaths)]
+
+if selected_incident:
+    filtered_df = filtered_df[filtered_df["Incident"].isin(selected_incident)]
+
+if selected_Start:
+    filtered_df = filtered_df[filtered_df["Start date"].isin(selected_Start)]
+
+if selected_End:
+    filtered_df = filtered_df[filtered_df["End date"].isin(selected_End)]
+
+# Now check if we have data left
 if not filtered_df.empty:
-    # Aggregate deaths by state
+    st.subheader("Filtered Deaths by State")
+    fig, ax = plt.subplots(figsize=(12,6))
+    sns.barplot(data=filtered_df, x="State", y="Number of deaths", ci=None, palette="magma", ax=ax)
+    ax.set_title("Deaths by State (Filtered)")
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
+    st.pyplot(fig)
+
+    # Build summary safely
     state_deaths = filtered_df.groupby("State", as_index=False)["Number of deaths"].sum()
-    state_deaths["Number of deaths"] = pd.to_numeric(state_deaths["Number of deaths"], errors="coerce")
+    top_states = state_deaths.nlargest(min(3, len(state_deaths)), "Number of deaths")
 
-    # Get top states safely
-    top_states = state_deaths.nlargest(3, "Number of deaths")
-
-    # Only build summary if we have enough rows
     if len(top_states) >= 3:
         summary = (
-            f"This chart reflects the filtered selection. "
             f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
-            f"followed by {top_states.iloc[1]['State']} and {top_states.iloc[2]['State']}. "
-            "Adjusting the sidebar filters allows you to explore specific states, incidents, or time periods."
+            f"followed by {top_states.iloc[1]['State']} and {top_states.iloc[2]['State']}."
         )
     elif len(top_states) == 2:
         summary = (
-            f"This chart reflects the filtered selection. "
             f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
-            f"followed by {top_states.iloc[1]['State']}. "
+            f"followed by {top_states.iloc[1]['State']}."
         )
     elif len(top_states) == 1:
-        summary = (
-            f"This chart reflects the filtered selection. "
-            f"{top_states.iloc[0]['State']} recorded the highest fatalities."
-        )
+        summary = f"{top_states.iloc[0]['State']} recorded the highest fatalities."
     else:
         summary = "No states available after filtering."
+
     st.write(summary)
 else:
     st.write("No data matches the current filter selection.")
+
 
 
 
