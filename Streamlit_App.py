@@ -121,23 +121,39 @@ if selected_End:
 ####
 # Load your dataset
 df = pd.read_csv("REBECCA.csv")
-st.subheader("Which states recorded the highest number of deaths?")
+if not filtered_df.empty:
+    fig, ax = plt.subplots(figsize=(16,6))  # wider figure
+    sns.barplot(data=filtered_df, x="State", y="Number of deaths", ci=None, palette="magma", ax=ax)
+    ax.set_title("Deaths by State (Filtered)")
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
+    st.pyplot(fig)
 
-# Plot bar chart of deaths by state
-fig, ax = plt.subplots(figsize=(16,6))  # wider figure
-sns.barplot(data=df, x="State", y="Number of deaths", ci=None, palette="magma", ax=ax)
-ax.set_title("Deaths by State")
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")  # rotate and align
-st.pyplot(fig)
+    # Dynamic summary
+    state_deaths = filtered_df.groupby("State", as_index=False)["Number of deaths"].sum()
+    top_states = state_deaths.nlargest(min(3, len(state_deaths)), "Number of deaths")
 
-# Add summary beneath chart
-summary = (
-    "This chart compares the total number of deaths across different states. "
-    "States with taller bars represent those that experienced more fatalities overall. "
-    "From the visualization, it is clear that certain states stand out with significantly higher death counts, "
-    "indicating regions that were more severely impacted by incidents compared to others."
-)
-st.write(summary)
+    if len(top_states) >= 3:
+        summary = (
+            f"This chart reflects the filtered selection. "
+            f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
+            f"followed by {top_states.iloc[1]['State']} and {top_states.iloc[2]['State']}."
+        )
+    elif len(top_states) == 2:
+        summary = (
+            f"This chart reflects the filtered selection. "
+            f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
+            f"followed by {top_states.iloc[1]['State']}."
+        )
+    elif len(top_states) == 1:
+        summary = f"This chart reflects the filtered selection. {top_states.iloc[0]['State']} recorded the highest fatalities."
+    else:
+        summary = "No states available after filtering."
+
+    st.write(summary)
+else:
+    st.write("No data matches the current filter selection.")
+
+
 
 
 
