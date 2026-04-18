@@ -188,6 +188,21 @@ else:
 
 
 ##q3
+st.subheader("3. Are there seasonal patterns in incidents?")
+df["Month"] = df["Start date"].dt.month
+fig, ax = plt.subplots()
+sns.countplot(data=df, x="Month", ax=ax)
+st.pyplot(fig)
+
+# Add summary
+monthly_counts = df["Month"].value_counts().sort_index()
+peak_month = monthly_counts.idxmax()
+low_month = monthly_counts.idxmin()
+
+st.write(
+    f"Incidents show clear seasonal variation. The highest number of incidents occurs in month {peak_month}, "
+    f"while the lowest occurs in month {low_month}. This suggests that certain times of the year are more prone to incidents."
+)
 
 
 
