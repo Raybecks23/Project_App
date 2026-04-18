@@ -205,7 +205,7 @@ st.write(summary)
 
 
 ##q6
-st.subheader("1. How do incidents vary by state?")
+st.subheader("6. How do incidents vary by top 10 state?")
 
 # Count incidents per state
 state_counts = df["State"].value_counts().reset_index()
