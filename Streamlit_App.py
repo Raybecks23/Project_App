@@ -187,41 +187,6 @@ else:
     st.write("No data matches the current filter selection.")
 
 
-##q3
-st.subheader("4. How do incidents cluster by type?")
-
-# Count incidents by type
-incident_counts = df["Incident"].value_counts().reset_index()
-incident_counts.columns = ["Incident", "Count"]
-
-# Select top 10 incident types
-top_incidents = incident_counts.nlargest(10, "Count")
-
-if not top_incidents.empty:
-    # Plot pie chart of top 10 incident types
-    fig, ax = plt.subplots(figsize=(8,8))  # larger for readability
-    top_incidents.set_index("Incident")["Count"].plot.pie(
-        autopct="%1.1f%%", ax=ax, legend=False
-    )
-    ax.set_ylabel("")  # remove y-label for cleaner look
-    ax.set_title("Top 10 Incident Types by Frequency")
-    st.pyplot(fig)
-
-    # Dynamic summary
-    if len(top_incidents) >= 3:
-        summary = (
-            f"This chart shows the distribution of the ten most common incident types. "
-            f"The largest share comes from {top_incidents.iloc[0]['Incident']}, "
-            f"followed by {top_incidents.iloc[1]['Incident']} and {top_incidents.iloc[2]['Incident']}. "
-            "These categories dominate the dataset, highlighting the incident types that occur most frequently."
-        )
-    elif len(top_incidents) == 2:
-        summary = (
-            f"This chart shows the distribution of the two most common incident types. "
-            f"{top_incidents.iloc[0]['Incident']} accounts for the largest share, "
-            f"followed by {top_incidents.iloc[1]['Incident']}."
-        )
-    elif len(top_incidents) == 1:
         summary = (
             f"This chart shows the distribution of incident types. "
             f"{top_incidents.iloc[0]['Incident']} is the only category represented."
@@ -232,6 +197,46 @@ if not top_incidents.empty:
     st.write(summary)
 else:
     st.write("No data matches the current filter selection.")
+
+
+
+
+##q3
+st.subheader("3. Are there seasonal patterns in incidents?")
+df["Month"] = df["Start date"].dt.month
+fig, ax = plt.subplots()
+sns.countplot(data=df, x="Month", ax=ax)
+st.pyplot(fig)
+
+
+##q4
+st.subheader("4. How do incidents cluster by type?")
+
+# Count incidents by type
+incident_counts = df["Incident"].value_counts().reset_index()
+incident_counts.columns = ["Incident", "Count"]
+
+# Select top 10 incident types
+top_incidents = incident_counts.nlargest(10, "Count")
+
+# Plot pie chart of top 10 incident types
+fig, ax = plt.subplots()
+top_incidents.set_index("Incident")["Count"].plot.pie(
+    autopct="%1.1f%%", ax=ax, legend=False
+)
+ax.set_ylabel("")  # remove y-label for cleaner look
+ax.set_title("Top 10 Incident Types by Frequency")
+st.pyplot(fig)
+
+# Add summary beneath chart
+summary = (
+    "This chart shows the distribution of the ten most common incident types. "
+    f"The largest share comes from {top_incidents.iloc[0]['Incident']}, "
+    f"followed by {top_incidents.iloc[1]['Incident']} and {top_incidents.iloc[2]['Incident']}. "
+    "These categories dominate the dataset, highlighting the incident types that occur most frequently."
+)
+st.write(summary)
+
 
 
 
@@ -269,33 +274,14 @@ st.write(summary)
 
 
 ##q6
-st.subheader("6. How do incidents vary by top 10 state?")
-
-# Count incidents per state
-state_counts = df["State"].value_counts().reset_index()
-state_counts.columns = ["State", "Count"]
-
-# Select top 10 states with most incidents
-top_states = state_counts.nlargest(10, "Count")["State"]
-
-# Filter original dataframe to only those top 10 states
-df_top_states = df[df["State"].isin(top_states)]
-
-# Plot countplot for top 10 states
-fig, ax = plt.subplots(figsize=(8,6))
-sns.countplot(data=df_top_states, x="State", ax=ax,
-              order=top_states)  # ensures sorted order
-ax.set_title("Top 10 States by Incident Count")
+st.subheader("1. How do incidents vary by state?")
+fig, ax = plt.subplots()
+sns.countplot(data=df, x="State", ax=ax)
+ax.set_title("Incident Counts by State")
 ax.set_xticklabels(ax.get_xticklabels(), rotation=30, ha="right")
 st.pyplot(fig)
+st.write("This chart shows how incidents are distributed across states, highlighting which regions experience more events overall.")
 
-# Add summary beneath chart
-summary = (
-    "This chart shows the distribution of incidents in the ten states with the highest counts. "
-    f"The leading state is {top_states.iloc[0]}, followed by {top_states.iloc[1]} and {top_states.iloc[2]}. "
-    "These states account for the majority of recorded incidents, highlighting regions most frequently affected."
-)
-st.write(summary)
 
 
 
@@ -321,10 +307,6 @@ sns.barplot(data=top_years, x="Year", y="Number of deaths", ax=ax)
 ax.set_title("Top 5 Years by Fatalities")
 st.pyplot(fig)
 st.write(f"The year {top_years.iloc[0]['Year']} recorded the highest fatalities, followed by {top_years.iloc[1]['Year']} and {top_years.iloc[2]['Year']}.")
-
-
-
-
 
 
 ##q9
@@ -359,8 +341,4 @@ summary = (
 st.write(summary)
 
 
-
-###Identifier, Start date, End date, Number of deaths, State, Incident, 
-# give 12 reserach question placing each into a subheader, and privde a seaborn,
-#  matplotlib chart for each in streamlit app
 
