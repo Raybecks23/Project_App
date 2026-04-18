@@ -366,7 +366,7 @@ else:
 
 
 ##q7
-st.subheader("7. Which states had the highest fatalities?")
+st.subheader("7. Which 5 states had the highest fatalities?")
 state_deaths = df.groupby("State", as_index=False)["Number of deaths"].sum()
 top_states = state_deaths.nlargest(5, "Number of deaths")
 fig, ax = plt.subplots()
