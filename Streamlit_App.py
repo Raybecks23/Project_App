@@ -183,10 +183,44 @@ st.write(
 
 ##q3
 st.subheader("3. Are there seasonal patterns in incidents?")
+
 df["Month"] = df["Start date"].dt.month
-fig, ax = plt.subplots()
-sns.countplot(data=df, x="Month", ax=ax)
+fig, ax = plt.subplots(figsize=(12,6))  # wider for readability
+sns.countplot(data=df, x="Month", ax=ax, palette="viridis")
+ax.set_title("Incidents by Month")
 st.pyplot(fig)
+
+# Dynamic summary
+monthly_counts = df["Month"].value_counts().sort_index()
+
+if not monthly_counts.empty:
+    top_months = monthly_counts.nlargest(min(3, len(monthly_counts)))
+    if len(top_months) >= 3:
+        summary = (
+            f"This chart shows incident frequency across months. "
+            f"The highest number of incidents occurred in month {top_months.index[0]}, "
+            f"followed by months {top_months.index[1]} and {top_months.index[2]}. "
+            "This suggests clear seasonal variation."
+        )
+    elif len(top_months) == 2:
+        summary = (
+            f"This chart shows incident frequency across months. "
+            f"The highest number of incidents occurred in month {top_months.index[0]}, "
+            f"followed by month {top_months.index[1]}."
+        )
+    elif len(top_months) == 1:
+        summary = (
+            f"This chart shows incident frequency across months. "
+            f"Only month {top_months.index[0]} is represented."
+        )
+    else:
+        summary = "No monthly data available after filtering."
+
+    st.write(summary)
+else:
+    st.write("No data matches the current filter selection.")
+
+
 
 
 ##q4
