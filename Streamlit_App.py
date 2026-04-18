@@ -188,7 +188,6 @@ else:
 
 
 ##q3
-##q4
 st.subheader("4. How do incidents cluster by type?")
 
 # Count incidents by type
@@ -198,25 +197,41 @@ incident_counts.columns = ["Incident", "Count"]
 # Select top 10 incident types
 top_incidents = incident_counts.nlargest(10, "Count")
 
-# Plot pie chart of top 10 incident types
-fig, ax = plt.subplots()
-top_incidents.set_index("Incident")["Count"].plot.pie(
-    autopct="%1.1f%%", ax=ax, legend=False
-)
-ax.set_ylabel("")  # remove y-label for cleaner look
-ax.set_title("Top 10 Incident Types by Frequency")
-st.pyplot(fig)
+if not top_incidents.empty:
+    # Plot pie chart of top 10 incident types
+    fig, ax = plt.subplots(figsize=(8,8))  # larger for readability
+    top_incidents.set_index("Incident")["Count"].plot.pie(
+        autopct="%1.1f%%", ax=ax, legend=False
+    )
+    ax.set_ylabel("")  # remove y-label for cleaner look
+    ax.set_title("Top 10 Incident Types by Frequency")
+    st.pyplot(fig)
 
-# Add summary beneath chart
-summary = (
-    "This chart shows the distribution of the ten most common incident types. "
-    f"The largest share comes from {top_incidents.iloc[0]['Incident']}, "
-    f"followed by {top_incidents.iloc[1]['Incident']} and {top_incidents.iloc[2]['Incident']}. "
-    "These categories dominate the dataset, highlighting the incident types that occur most frequently."
-)
-st.write(summary)
+    # Dynamic summary
+    if len(top_incidents) >= 3:
+        summary = (
+            f"This chart shows the distribution of the ten most common incident types. "
+            f"The largest share comes from {top_incidents.iloc[0]['Incident']}, "
+            f"followed by {top_incidents.iloc[1]['Incident']} and {top_incidents.iloc[2]['Incident']}. "
+            "These categories dominate the dataset, highlighting the incident types that occur most frequently."
+        )
+    elif len(top_incidents) == 2:
+        summary = (
+            f"This chart shows the distribution of the two most common incident types. "
+            f"{top_incidents.iloc[0]['Incident']} accounts for the largest share, "
+            f"followed by {top_incidents.iloc[1]['Incident']}."
+        )
+    elif len(top_incidents) == 1:
+        summary = (
+            f"This chart shows the distribution of incident types. "
+            f"{top_incidents.iloc[0]['Incident']} is the only category represented."
+        )
+    else:
+        summary = "No incident types available after filtering."
 
-
+    st.write(summary)
+else:
+    st.write("No data matches the current filter selection.")
 
 
 
