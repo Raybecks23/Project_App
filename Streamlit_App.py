@@ -94,7 +94,7 @@ with st.expander("Click to check Incident Table", expanded=False):
 
 ####
 # Load your dataset
-df = pd.read_csv("victor.csv")
+df = pd.read_csv("REBECCA.csv")
 st.subheader("Which states recorded the highest number of deaths?")
 fig, ax = plt.subplots(figsize=(16,6))  # wider figure
 sns.barplot(data=df, x="State", y="Number of deaths", ci=None, palette="magma", ax=ax)
