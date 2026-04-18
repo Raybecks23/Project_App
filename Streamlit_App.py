@@ -206,13 +206,32 @@ st.write(summary)
 
 ##q6
 st.subheader("1. How do incidents vary by state?")
-fig, ax = plt.subplots()
-sns.countplot(data=df, x="State", ax=ax)
-ax.set_title("Incident Counts by State")
+
+# Count incidents per state
+state_counts = df["State"].value_counts().reset_index()
+state_counts.columns = ["State", "Count"]
+
+# Select top 10 states with most incidents
+top_states = state_counts.nlargest(10, "Count")["State"]
+
+# Filter original dataframe to only those top 10 states
+df_top_states = df[df["State"].isin(top_states)]
+
+# Plot countplot for top 10 states
+fig, ax = plt.subplots(figsize=(8,6))
+sns.countplot(data=df_top_states, x="State", ax=ax,
+              order=top_states)  # ensures sorted order
+ax.set_title("Top 10 States by Incident Count")
 ax.set_xticklabels(ax.get_xticklabels(), rotation=30, ha="right")
 st.pyplot(fig)
-st.write("This chart shows how incidents are distributed across states, highlighting which regions experience more events overall.")
 
+# Add summary beneath chart
+summary = (
+    "This chart shows the distribution of incidents in the ten states with the highest counts. "
+    f"The leading state is {top_states.iloc[0]}, followed by {top_states.iloc[1]} and {top_states.iloc[2]}. "
+    "These states account for the majority of recorded incidents, highlighting regions most frequently affected."
+)
+st.write(summary)
 
 
 
