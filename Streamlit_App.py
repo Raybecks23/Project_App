@@ -96,18 +96,24 @@ with st.expander("Click to check Incident Table", expanded=False):
 # Load your dataset
 df = pd.read_csv("REBECCA.csv")
 st.subheader("Which states recorded the highest number of deaths?")
+
+# Plot bar chart of deaths by state
 fig, ax = plt.subplots(figsize=(16,6))  # wider figure
 sns.barplot(data=df, x="State", y="Number of deaths", ci=None, palette="magma", ax=ax)
 ax.set_title("Deaths by State")
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")  # rotate and align
 st.pyplot(fig)
 
-st.markdown(f"""
-**Summary**
-- Total deaths across all states: **{df["Number of deaths"].sum()}**
-- Average deaths per record: **{df["Number of deaths"].mean():.2f}**
-- State with the highest deaths: **{df["State"].idxmax()}** ({df["Number of deaths"].max()} deaths)
-""")
+# Add summary beneath chart
+summary = (
+    "This chart compares the total number of deaths across different states. "
+    "States with taller bars represent those that experienced more fatalities overall. "
+    "From the visualization, it is clear that certain states stand out with significantly higher death counts, "
+    "indicating regions that were more severely impacted by incidents compared to others."
+)
+st.write(summary)
+
+
 
 ###q2
 st.subheader("2. What is the trend of incidents over time?")
