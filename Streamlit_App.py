@@ -156,35 +156,27 @@ else:
 
 
 ###q2
-filtered_df["Start date"] = pd.to_datetime(filtered_df["Start date"], errors="coerce")
-filtered_df["End date"] = pd.to_datetime(filtered_df["End date"], errors="coerce")
+###q2
+st.subheader("2. What is the trend of incidents over time?")
+
+# Ensure Start date and End date are datetime
+df["Start date"] = pd.to_datetime(df["Start date"], errors="coerce")
+df["End date"] = pd.to_datetime(df["End date"], errors="coerce")
 
 # Extract year from Start date
-filtered_df["Year"] = filtered_df["Start date"].dt.year
+df["Year"] = df["Start date"].dt.year
 
-# Chart linked to filters
-if not filtered_df.empty:
-    fig, ax = plt.subplots()
-    filtered_df["Year"].value_counts().sort_index().plot(ax=ax, kind="line", marker="o")
-    ax.set_xlabel("Year")
-    ax.set_ylabel("Number of Incidents")
-    ax.set_title("Trend of Incidents Over Time (Filtered)")
-    st.pyplot(fig)
-
-    # Dynamic summary
-    year_counts = filtered_df["Year"].value_counts().sort_index()
-    if not year_counts.empty:
-        top_years = year_counts.nlargest(min(3, len(year_counts)))
-        summary = (
-            f"This chart reflects the filtered selection. "
-            f"The year {top_years.index[0]} recorded the highest number of incidents, "
-            f"followed by {top_years.index[1]} and {top_years.index[2]}." 
-            if len(top_years) >= 3 else
-            f"This chart reflects the filtered selection. The year {top_years.index[0]} recorded the highest number of incidents."
-        )
-        st.write(summary)
-else:
-    st.write("No data matches the current filter selection.")
+# Plot incidents per year
+fig, ax = plt.subplots()
+df["Year"].value_counts().sort_index().plot(ax=ax, kind="line", marker="o")
+ax.set_xlabel("Year")
+ax.set_ylabel("Number of Incidents")
+ax.set_title("Trend of Incidents Over Time")
+st.pyplot(fig)
+st.write(
+    "This chart shows how the number of recorded incidents changes over time. "
+    "Peaks indicate years with higher incident frequency, while troughs suggest relatively calmer periods."
+)
 
 
 
