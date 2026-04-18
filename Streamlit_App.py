@@ -138,12 +138,27 @@ st.write(
 )
 
 
-##q5
+##q3
 st.subheader("3. Are there seasonal patterns in incidents?")
+
+# Extract month from Start date
 df["Month"] = df["Start date"].dt.month
+
+# Plot count of incidents by month
 fig, ax = plt.subplots()
 sns.countplot(data=df, x="Month", ax=ax)
+ax.set_title("Incidents by Month")
 st.pyplot(fig)
+
+# Add summary beneath chart
+summary = (
+    "This chart shows how incidents are distributed across months of the year. "
+    "Peaks in certain months suggest possible seasonal patterns, where incidents occur more frequently. "
+    "Lower counts in other months indicate quieter periods. "
+    "This visualization helps identify whether specific times of the year are more prone to incidents."
+)
+st.write(summary)
+
 
 
 ##q4
