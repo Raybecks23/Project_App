@@ -189,32 +189,51 @@ else:
 
 
 
-##q4
-fig, ax = plt.subplots()
-top_incidents.set_index("Incident")["Count"].plot.pie(
-    autopct="%1.1f%%", ax=ax, legend=False
-)
-ax.set_ylabel("")  # remove y-label for cleaner look
-ax.set_title(f"Top {top_n} Incident Types by Frequency")
-st.pyplot(fig)
+##q3
+st.subheader("3. Are there seasonal patterns in incidents?")
 
-# Dynamic summary linked to sidebar
-if not top_incidents.empty:
-    if len(top_incidents) >= 3:
+# Ensure Start date is datetime
+df["Start date"] = pd.to_datetime(df["Start date"], errors="coerce")
+
+# Extract month from Start date
+df["Month"] = df["Start date"].dt.month
+
+# Chart linked to filters
+if not df.empty:
+    fig, ax = plt.subplots(figsize=(12,6))  # wider figure for readability
+    sns.countplot(data=df, x="Month", ax=ax, palette="viridis")
+    ax.set_title("Incidents by Month")
+    st.pyplot(fig)
+
+    # Dynamic summary
+    month_counts = df["Month"].value_counts().sort_index()
+    top_months = month_counts.nlargest(min(3, len(month_counts)))
+
+    if len(top_months) >= 3:
         summary = (
-            f"This chart shows the distribution of the {top_n} most common incident types. "
-            f"The largest share comes from {top_incidents.iloc[0]['Incident']}, "
-            f"followed by {top_incidents.iloc[1]['Incident']} and {top_incidents.iloc[2]['Incident']}. "
-            "These categories dominate the dataset, highlighting the incident types that occur most frequently."
+            f"This chart reflects the filtered selection. "
+            f"Month {top_months.index[0]} recorded the highest number of incidents, "
+            f"followed by {top_months.index[1]} and {top_months.index[2]}. "
+            "This suggests possible seasonal patterns."
+        )
+    elif len(top_months) == 2:
+        summary = (
+            f"This chart reflects the filtered selection. "
+            f"Month {top_months.index[0]} recorded the highest number of incidents, "
+            f"followed by {top_months.index[1]}."
+        )
+    elif len(top_months) == 1:
+        summary = (
+            f"This chart reflects the filtered selection. "
+            f"Month {top_months.index[0]} recorded the highest number of incidents."
         )
     else:
-        summary = (
-            f"This chart shows the distribution of the {top_n} most common incident types. "
-            f"The largest share comes from {top_incidents.iloc[0]['Incident']}."
-        )
-    st.sidebar.write(summary)
+        summary = "No months available after filtering."
+
+    st.write(summary)
 else:
-    st.sidebar.write("No incident data available for clustering.")
+    st.write("No data matches the current filter selection.")
+
 
 
 
