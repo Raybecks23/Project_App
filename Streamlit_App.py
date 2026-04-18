@@ -156,6 +156,13 @@ else:
 
 
 ###q2
+filtered_df["Start date"] = pd.to_datetime(filtered_df["Start date"], errors="coerce")
+filtered_df["End date"] = pd.to_datetime(filtered_df["End date"], errors="coerce")
+
+# Extract year from Start date
+filtered_df["Year"] = filtered_df["Start date"].dt.year
+
+# Chart linked to filters
 if not filtered_df.empty:
     fig, ax = plt.subplots()
     filtered_df["Year"].value_counts().sort_index().plot(ax=ax, kind="line", marker="o")
@@ -178,9 +185,6 @@ if not filtered_df.empty:
         st.write(summary)
 else:
     st.write("No data matches the current filter selection.")
-
-
-
 
 
 
