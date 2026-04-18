@@ -323,6 +323,10 @@ st.pyplot(fig)
 st.write(f"The year {top_years.iloc[0]['Year']} recorded the highest fatalities, followed by {top_years.iloc[1]['Year']} and {top_years.iloc[2]['Year']}.")
 
 
+
+
+
+
 ##q9
 st.subheader("9. What is the distribution of fatalities across states?")
 
