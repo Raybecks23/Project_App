@@ -182,6 +182,8 @@ st.write(
 
 
 ##q3
+# Sidebar filter for states
+selected_states = st.sidebar.multiselect("Select states", df["State"].unique())
 if selected_states:
     filtered_df = df[df["State"].isin(selected_states)]
 else:
