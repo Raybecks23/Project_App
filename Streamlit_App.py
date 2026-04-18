@@ -187,18 +187,6 @@ else:
     st.write("No data matches the current filter selection.")
 
 
-        summary = (
-            f"This chart shows the distribution of incident types. "
-            f"{top_incidents.iloc[0]['Incident']} is the only category represented."
-        )
-    else:
-        summary = "No incident types available after filtering."
-
-    st.write(summary)
-else:
-    st.write("No data matches the current filter selection.")
-
-
 
 
 ##q3
