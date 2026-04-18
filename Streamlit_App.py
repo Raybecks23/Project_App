@@ -78,6 +78,14 @@ st.set_page_config(
     layout="wide",                          # Options: "centered" or "wide"
     initial_sidebar_state="expanded"        # Options: "expanded" or "collapsed"
 )
+
+
+st.title("Incidents Analysis Dashboard")
+columns = ["Identifier","Incident","State","Start date","End date","Number of deaths"]
+df = df[columns]
+with st.expander("Click to check Incident Table", expanded=False):
+    st.dataframe(df, width="stretch", height=200)
+
 # Sidebar filters
 # Sidebar filters (always define them first)
 selected_state = st.sidebar.multiselect("Choose a State:", df["State"].unique())
@@ -106,41 +114,8 @@ if selected_End:
     filtered_df = filtered_df[filtered_df["End date"].isin(selected_End)]
 
 # Chart linked to filters
-st.subheader("Filtered Deaths by State")
-if not filtered_df.empty:
-    fig, ax = plt.subplots(figsize=(12,6))
-    sns.barplot(data=filtered_df, x="State", y="Number of deaths", ci=None, palette="magma", ax=ax)
-    ax.set_title("Deaths by State (Filtered)")
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
-    st.pyplot(fig)
-
-    # Build summary safely
-    state_deaths = filtered_df.groupby("State", as_index=False)["Number of deaths"].sum()
-    top_states = state_deaths.nlargest(min(3, len(state_deaths)), "Number of deaths")
-
-    if len(top_states) >= 3:
-        st.write(
-            f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
-            f"followed by {top_states.iloc[1]['State']} and {top_states.iloc[2]['State']}."
-        )
-    elif len(top_states) == 2:
-        st.write(
-            f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
-            f"followed by {top_states.iloc[1]['State']}."
-        )
-    elif len(top_states) == 1:
-        st.write(f"{top_states.iloc[0]['State']} recorded the highest fatalities.")
-else:
-    st.write("No data matches the current filter selection.")
 
 
-
-
-st.title("Incidents Analysis Dashboard")
-columns = ["Identifier","Incident","State","Start date","End date","Number of deaths"]
-df = df[columns]
-with st.expander("Click to check Incident Table", expanded=False):
-    st.dataframe(df, width="stretch", height=200)
 
 
 ####
