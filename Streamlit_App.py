@@ -288,13 +288,49 @@ st.write(summary)
 
 
 ##q6
-st.subheader("1. How do incidents vary by state?")
-fig, ax = plt.subplots()
-sns.countplot(data=df, x="State", ax=ax)
-ax.set_title("Incident Counts by State")
-ax.set_xticklabels(ax.get_xticklabels(), rotation=30, ha="right")
-st.pyplot(fig)
-st.write("This chart shows how incidents are distributed across states, highlighting which regions experience more events overall.")
+st.subheader("6. How do incidents vary by state?")
+
+# Count incidents by state
+state_counts = df["State"].value_counts().reset_index()
+state_counts.columns = ["State", "Count"]
+
+# Select top 10 states
+top_states = state_counts.nlargest(10, "Count")
+
+if not top_states.empty:
+    # Plot bar chart of top 10 states
+    fig, ax = plt.subplots(figsize=(14,6))
+    sns.barplot(data=top_states, x="State", y="Count", ci=None, palette="magma", ax=ax)
+    ax.set_title("Top 10 States by Incident Counts")
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=30, ha="right")
+    st.pyplot(fig)
+
+    # Dynamic summary
+    if len(top_states) >= 3:
+        summary = (
+            f"This chart highlights the states with the most incidents. "
+            f"{top_states.iloc[0]['State']} recorded the highest number of incidents, "
+            f"followed by {top_states.iloc[1]['State']} and {top_states.iloc[2]['State']}. "
+            "These states stand out as the most affected regions."
+        )
+    elif len(top_states) == 2:
+        summary = (
+            f"This chart highlights the states with the most incidents. "
+            f"{top_states.iloc[0]['State']} recorded the highest number of incidents, "
+            f"followed by {top_states.iloc[1]['State']}."
+        )
+    elif len(top_states) == 1:
+        summary = (
+            f"This chart highlights the states with the most incidents. "
+            f"{top_states.iloc[0]['State']} is the only state represented."
+        )
+    else:
+        summary = "No states available after filtering."
+
+    st.write(summary)
+else:
+    st.write("No data matches the current filter selection.")
+
 
 
 
