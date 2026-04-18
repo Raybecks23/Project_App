@@ -118,6 +118,18 @@ if selected_End:
 
 
 
+# Example: calculate total deaths
+total_deaths = df["Number of deaths"].sum()
+
+# I counted unique states
+total_states = df["State"].nunique()
+
+# I calculated total number of deaths
+total_deaths = df["Number of deaths"].sum()
+
+# I calculated total number of incidents
+unique_incidents = df["Incident"].nunique()
+
 # I created three columns for side-by-side display
 col1, col2, col3 = st.columns(3)
 
