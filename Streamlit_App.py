@@ -118,6 +118,24 @@ if selected_End:
 
 
 
+# I created three columns for side-by-side display
+col1, col2, col3 = st.columns(3)
+
+with col1.popover("Show Total States"):
+    st.write(f"{total_states} States including FCT Abuja")
+
+with col2.popover("Show Total Deaths"):
+    st.write(f"{total_deaths} Deaths Across Nigeria")
+
+with col3.popover("Show Total Incidents"):
+    st.write(f"{unique_incidents} Incidents")
+
+
+
+
+
+
+
 ####
 # Load your dataset
 df = pd.read_csv("REBECCA.csv")
