@@ -193,13 +193,24 @@ else:
 ##q3
 st.subheader("3. Are there seasonal patterns in incidents?")
 
+# Sidebar control: choose chart type
+chart_type = st.sidebar.radio(
+    "Select chart type:",
+    ["Countplot", "Lineplot"]
+)
+
 # Extract month from Start date
 df["Month"] = df["Start date"].dt.month
 
-# Plot count of incidents by month
+# Plot based on sidebar selection
 fig, ax = plt.subplots()
-sns.countplot(data=df, x="Month", ax=ax)
-ax.set_title("Incidents by Month")
+if chart_type == "Countplot":
+    sns.countplot(data=df, x="Month", ax=ax)
+    ax.set_title("Incidents by Month (Countplot)")
+else:
+    df["Month"].value_counts().sort_index().plot(ax=ax, kind="line", marker="o")
+    ax.set_title("Incidents by Month (Lineplot)")
+
 st.pyplot(fig)
 
 # Add summary beneath chart
@@ -209,7 +220,7 @@ summary = (
     "Lower counts in other months indicate quieter periods. "
     "This visualization helps identify whether specific times of the year are more prone to incidents."
 )
-st.write(summary)
+st.sidebar.write(summary)
 
 
 
