@@ -191,34 +191,31 @@ else:
 
 
 ##q3
-st.subheader("3. Are there seasonal patterns in incidents?")
+if not df.empty:
+    fig, ax = plt.subplots()
+    sns.countplot(data=df, x="Month", ax=ax)
+    ax.set_title("Incidents by Month")
+    st.pyplot(fig)
 
-# Sidebar control: filter by year
-years = df["Start date"].dt.year.unique()
-selected_year = st.sidebar.selectbox("Select Year:", sorted(years))
-
-# Extract month from Start date
-df["Month"] = df["Start date"].dt.month
-
-# Filter data based on sidebar selection
-filtered_df = df[df["Start date"].dt.year == selected_year]
-
-# Plot count of incidents by month
-fig, ax = plt.subplots()
-sns.countplot(data=filtered_df, x="Month", ax=ax)
-ax.set_title(f"Incidents by Month ({selected_year})")
-st.pyplot(fig)
-
-# Add summary beneath chart
-summary = (
-    f"This chart shows how incidents are distributed across months in {selected_year}. "
-    "Peaks in certain months suggest possible seasonal patterns, where incidents occur more frequently. "
-    "Lower counts in other months indicate quieter periods. "
-    "This visualization helps identify whether specific times of the year are more prone to incidents."
-)
-st.sidebar.write(summary)
-
-
+    # Dynamic summary
+    month_counts = df["Month"].value_counts().sort_index()
+    if not month_counts.empty:
+        top_months = month_counts.nlargest(min(3, len(month_counts)))
+        if len(top_months) >= 3:
+            summary = (
+                f"This chart shows how incidents are distributed across months. "
+                f"The month {top_months.index[0]} recorded the highest number of incidents, "
+                f"followed by {top_months.index[1]} and {top_months.index[2]}. "
+                "This suggests possible seasonal patterns where incidents occur more frequently."
+            )
+        else:
+            summary = (
+                f"This chart shows how incidents are distributed across months. "
+                f"The month {top_months.index[0]} recorded the highest number of incidents."
+            )
+        st.write(summary)
+else:
+    st.write("No data available for seasonal analysis.")
 
 
 ##q4
