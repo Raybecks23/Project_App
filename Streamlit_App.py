@@ -191,31 +191,31 @@ else:
 
 
 ##q3
-if not df.empty:
+if not filtered_df.empty:
     fig, ax = plt.subplots()
-    sns.countplot(data=df, x="Month", ax=ax)
-    ax.set_title("Incidents by Month")
+    sns.countplot(data=filtered_df, x="Month", ax=ax)
+    ax.set_title(f"Incidents by Month ({selected_year})")
     st.pyplot(fig)
 
     # Dynamic summary
-    month_counts = df["Month"].value_counts().sort_index()
+    month_counts = filtered_df["Month"].value_counts().sort_index()
     if not month_counts.empty:
         top_months = month_counts.nlargest(min(3, len(month_counts)))
         if len(top_months) >= 3:
             summary = (
-                f"This chart shows how incidents are distributed across months. "
-                f"The month {top_months.index[0]} recorded the highest number of incidents, "
+                f"This chart reflects the filtered selection for {selected_year}. "
+                f"Month {top_months.index[0]} recorded the highest number of incidents, "
                 f"followed by {top_months.index[1]} and {top_months.index[2]}. "
-                "This suggests possible seasonal patterns where incidents occur more frequently."
+                "This suggests possible seasonal patterns."
             )
         else:
             summary = (
-                f"This chart shows how incidents are distributed across months. "
-                f"The month {top_months.index[0]} recorded the highest number of incidents."
+                f"This chart reflects the filtered selection for {selected_year}. "
+                f"Month {top_months.index[0]} recorded the highest number of incidents."
             )
-        st.write(summary)
+        st.sidebar.write(summary)
 else:
-    st.write("No data available for seasonal analysis.")
+    st.write("No data matches the current filter selection.")
 
 
 ##q4
