@@ -188,12 +188,33 @@ else:
 
 
 ##q3
-##q5
-st.subheader("3. Are there seasonal patterns in incidents?")
-df["Month"] = df["Start date"].dt.month
+##q4
+st.subheader("4. How do incidents cluster by type?")
+
+# Count incidents by type
+incident_counts = df["Incident"].value_counts().reset_index()
+incident_counts.columns = ["Incident", "Count"]
+
+# Select top 10 incident types
+top_incidents = incident_counts.nlargest(10, "Count")
+
+# Plot pie chart of top 10 incident types
 fig, ax = plt.subplots()
-sns.countplot(data=df, x="Month", ax=ax)
+top_incidents.set_index("Incident")["Count"].plot.pie(
+    autopct="%1.1f%%", ax=ax, legend=False
+)
+ax.set_ylabel("")  # remove y-label for cleaner look
+ax.set_title("Top 10 Incident Types by Frequency")
 st.pyplot(fig)
+
+# Add summary beneath chart
+summary = (
+    "This chart shows the distribution of the ten most common incident types. "
+    f"The largest share comes from {top_incidents.iloc[0]['Incident']}, "
+    f"followed by {top_incidents.iloc[1]['Incident']} and {top_incidents.iloc[2]['Incident']}. "
+    "These categories dominate the dataset, highlighting the incident types that occur most frequently."
+)
+st.write(summary)
 
 
 
