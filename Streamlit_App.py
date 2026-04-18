@@ -79,7 +79,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"        # Options: "expanded" or "collapsed"
 )
 # Sidebar filters
-# Always start with a copy of df
+# Sidebar filters (always define them first)
+selected_state = st.sidebar.multiselect("Choose a State:", df["State"].unique())
+selected_deaths = st.sidebar.multiselect("Choose Number of deaths:", df["Number of deaths"].unique())
+selected_incident = st.sidebar.multiselect("Choose an Incident:", df["Incident"].unique())
+selected_Start = st.sidebar.multiselect("Choose from Start date:", df["Start date"].unique())
+selected_End = st.sidebar.multiselect("Choose from End date:", df["End date"].unique())
+
+# Start with full dataframe
 filtered_df = df.copy()
 
 # Apply filters safely
@@ -98,9 +105,9 @@ if selected_Start:
 if selected_End:
     filtered_df = filtered_df[filtered_df["End date"].isin(selected_End)]
 
-# Now check if we have data left
+# Chart linked to filters
+st.subheader("Filtered Deaths by State")
 if not filtered_df.empty:
-    st.subheader("Filtered Deaths by State")
     fig, ax = plt.subplots(figsize=(12,6))
     sns.barplot(data=filtered_df, x="State", y="Number of deaths", ci=None, palette="magma", ax=ax)
     ax.set_title("Deaths by State (Filtered)")
@@ -112,21 +119,17 @@ if not filtered_df.empty:
     top_states = state_deaths.nlargest(min(3, len(state_deaths)), "Number of deaths")
 
     if len(top_states) >= 3:
-        summary = (
+        st.write(
             f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
             f"followed by {top_states.iloc[1]['State']} and {top_states.iloc[2]['State']}."
         )
     elif len(top_states) == 2:
-        summary = (
+        st.write(
             f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
             f"followed by {top_states.iloc[1]['State']}."
         )
     elif len(top_states) == 1:
-        summary = f"{top_states.iloc[0]['State']} recorded the highest fatalities."
-    else:
-        summary = "No states available after filtering."
-
-    st.write(summary)
+        st.write(f"{top_states.iloc[0]['State']} recorded the highest fatalities.")
 else:
     st.write("No data matches the current filter selection.")
 
