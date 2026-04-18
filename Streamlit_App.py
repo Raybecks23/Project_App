@@ -79,11 +79,57 @@ st.set_page_config(
     initial_sidebar_state="expanded"        # Options: "expanded" or "collapsed"
 )
 # Sidebar filters
+# Sidebar filters
 selected_state = st.sidebar.multiselect("Choose a State:", df["State"].unique())
 selected_deaths = st.sidebar.multiselect("Choose Number of deaths:", df["Number of deaths"].unique())
 selected_incident = st.sidebar.multiselect("Choose an Incident:", df["Incident"].unique())
 selected_Start = st.sidebar.multiselect("Choose from Start date:", df["Start date"].unique())
 selected_End = st.sidebar.multiselect("Choose from End date:", df["End date"].unique())
+
+# Apply filters step by step
+filtered_df = df.copy()
+
+if selected_state:
+    filtered_df = filtered_df[filtered_df["State"].isin(selected_state)]
+
+if selected_deaths:
+    filtered_df = filtered_df[filtered_df["Number of deaths"].isin(selected_deaths)]
+
+if selected_incident:
+    filtered_df = filtered_df[filtered_df["Incident"].isin(selected_incident)]
+
+if selected_Start:
+    filtered_df = filtered_df[filtered_df["Start date"].isin(selected_Start)]
+
+if selected_End:
+    filtered_df = filtered_df[filtered_df["End date"].isin(selected_End)]
+
+# Chart linked to filters
+st.subheader("Filtered Deaths by State")
+fig, ax = plt.subplots(figsize=(12,6))
+sns.barplot(data=filtered_df, x="State", y="Number of deaths", ci=None, palette="magma", ax=ax)
+ax.set_title("Deaths by State (Filtered)")
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
+st.pyplot(fig)
+
+# Summary beneath chart
+if not filtered_df.empty:
+    state_deaths = filtered_df.groupby("State", as_index=False)["Number of deaths"].sum()
+    top_states = state_deaths.nlargest(3, "Number of deaths")
+    summary = (
+        f"This chart reflects the filtered selection. "
+        f"{top_states.iloc[0]['State']} recorded the highest fatalities, "
+        f"followed by {top_states.iloc[1]['State']} and {top_states.iloc[2]['State']}. "
+        "Adjusting the sidebar filters allows you to explore specific states, incidents, or time periods."
+    )
+    st.write(summary)
+else:
+    st.write("No data matches the current filter selection.")
+
+
+
+
+
 
 st.title("Incidents Analysis Dashboard")
 columns = ["Identifier","Incident","State","Start date","End date","Number of deaths"]
