@@ -33,22 +33,27 @@ st.markdown(
         background: linear-gradient(270deg, #00ffcc, #ffcc00, #ff00cc, #3333ff);
         background-size: 600% 600%;
         animation: gradientShift 15s ease infinite;
-        color: white; /* text color */
+        color: white;
     }
 
-    /* Floating particles */
+    /* Floating particles with more movement */
     .particle {
         position: fixed;
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
         background: rgba(255,255,255,0.8);
         border-radius: 50%;
-        animation: floatUp 30s linear infinite;
+        animation: floatUp 18s linear infinite, driftSide 6s ease-in-out infinite alternate;
     }
 
     @keyframes floatUp {
         from {transform: translateY(100vh);}
-        to {transform: translateY(-10vh);}
+        to {transform: translateY(-20vh);}
+    }
+
+    @keyframes driftSide {
+        from {transform: translateX(-30px);}
+        to {transform: translateX(30px);}
     }
 
     /* Neon glow overlay */
@@ -71,6 +76,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 st.set_page_config(
     page_title="My Insane Streamlit App",   # Title shown in browser tab
