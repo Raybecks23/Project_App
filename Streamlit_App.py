@@ -43,7 +43,7 @@ st.markdown(
         height: 10px;
         background: rgba(255,255,255,0.8);
         border-radius: 50%;
-        animation: floatUp 10s linear infinite;
+        animation: floatUp 30s linear infinite;
     }
 
     @keyframes floatUp {
