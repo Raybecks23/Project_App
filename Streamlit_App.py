@@ -10,7 +10,6 @@ from PIL import Image
 
 df = pd.read_csv("REBECCA.csv")
 
-
 st.markdown(
     """
     <style>
@@ -39,11 +38,9 @@ st.markdown(
     /* Floating particles with more movement */
     .particle {
         position: fixed;
-        width: 12px;
-        height: 12px;
-        background: rgba(255,255,255,0.8);
         border-radius: 50%;
         animation: floatUp 18s linear infinite, driftSide 6s ease-in-out infinite alternate;
+        opacity: 0.7;
     }
 
     @keyframes floatUp {
@@ -52,8 +49,8 @@ st.markdown(
     }
 
     @keyframes driftSide {
-        from {transform: translateX(-30px);}
-        to {transform: translateX(30px);}
+        from {transform: translateX(-40px);}
+        to {transform: translateX(40px);}
     }
 
     /* Neon glow overlay */
@@ -69,13 +66,25 @@ st.markdown(
     </style>
 
     <div class="neon"></div>
-    <div class="particle" style="left:20%; animation-delay:0s;"></div>
-    <div class="particle" style="left:40%; animation-delay:2s;"></div>
-    <div class="particle" style="left:60%; animation-delay:4s;"></div>
-    <div class="particle" style="left:80%; animation-delay:6s;"></div>
+
+    <!-- Multiple particles scattered across the page -->
+    <div class="particle" style="left:10%; width:8px; height:8px; background:#fff; animation-delay:0s;"></div>
+    <div class="particle" style="left:25%; width:14px; height:14px; background:#ffcc00; animation-delay:2s;"></div>
+    <div class="particle" style="left:40%; width:10px; height:10px; background:#00ffcc; animation-delay:4s;"></div>
+    <div class="particle" style="left:55%; width:16px; height:16px; background:#ff00cc; animation-delay:6s;"></div>
+    <div class="particle" style="left:70%; width:12px; height:12px; background:#3333ff; animation-delay:8s;"></div>
+    <div class="particle" style="left:85%; width:18px; height:18px; background:#fff; animation-delay:10s;"></div>
+    <div class="particle" style="left:15%; width:20px; height:20px; background:#ffcc00; animation-delay:12s;"></div>
+    <div class="particle" style="left:35%; width:9px; height:9px; background:#00ffcc; animation-delay:14s;"></div>
+    <div class="particle" style="left:65%; width:13px; height:13px; background:#ff00cc; animation-delay:16s;"></div>
+    <div class="particle" style="left:90%; width:11px; height:11px; background:#3333ff; animation-delay:18s;"></div>
     """,
     unsafe_allow_html=True
 )
+
+
+
+
 
 
 st.set_page_config(
